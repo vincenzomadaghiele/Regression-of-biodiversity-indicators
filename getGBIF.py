@@ -33,7 +33,7 @@ def get_GBIF_response(base_url, offset, params, df):
         return df_concat, endOfRecords, response.status_code
 
 #set parameters for API call
-params = ['limit=300', 'hasCoordinate=true', 'hasGeospatialIssue=false', 'country=IT']
+params = ['limit=300', 'hasCoordinate=true', 'hasGeospatialIssue=false', 'speciesKey=9055455'] #This SpeciesKey is for camel
 #Set up a simple while loop to continue downloading until the last #page
 df = pd.DataFrame()
 endOfRecords = False
