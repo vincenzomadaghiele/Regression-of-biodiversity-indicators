@@ -18,10 +18,10 @@ If the performance of the experiments prove to be successful these results could
 
 ## References
 
-[1] Zbigniew  Bochenek.   Monitoring  forest  biodiversity  and  the  impact  ofclimate on forest environment using high-resolution satellite images.Eu-ropean Journal of Remote Sensing, 51(1):166–181, 2017.
+[1] Zbigniew  Bochenek,   Monitoring  forest  biodiversity  and  the  impact  ofclimate on forest environment using high-resolution satellite images, European Journal of Remote Sensing, 51(1):166–181, 2017.
 
-[2] Woody Turner. Remote sensing for biodiversity science and conservation.Trends in Ecology Evolution, 18(6):306–314, 2003.
+[2] Woody Turner, Remote sensing for biodiversity science and conservation, Trends in Ecology Evolution, 18(6):306–314, 2003.
 
-[3] www.copernicus.eu.  Copernicus, 2020
+[3] www.gbif.org.  Gbif database, 2020.
 
-[4] www.gbif.org.  Gbif database, 2020.
+[4] www.copernicus.eu.  Copernicus, 2020
