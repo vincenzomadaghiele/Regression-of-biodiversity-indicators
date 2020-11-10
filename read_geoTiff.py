@@ -181,5 +181,11 @@ def scaleALDH(row):
 ALDH['ALDH'] = ALDH.apply(scaleALDH, axis=1)
 
 
+def cutLat(row):
+    return int(row['latitude']*100)/100
+def cutLon(row):
+    return int(row['longitude']*100)/100
 
+ALDH['latitude'] = ALDH.apply(cutLat, axis=1)
+ALDH['longitude'] = ALDH.apply(cutLon, axis=1)
 
