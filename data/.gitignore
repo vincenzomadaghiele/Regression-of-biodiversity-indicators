@@ -1,0 +1,5 @@
+*.csv
+*.tiff
+*.nc
+.copernicus_land
+copernicus_land.zip

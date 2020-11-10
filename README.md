@@ -1,5 +1,5 @@
 # Regression-of-biodiversity-indicators
-##### Student: Vincenzo Madaghiele
+##### Students: Vincenzo Madaghiele, Cosimo Chetta
 
 ## Project Description
 
