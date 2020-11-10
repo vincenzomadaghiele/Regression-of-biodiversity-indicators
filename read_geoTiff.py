@@ -82,9 +82,55 @@ FCOVER = pd.read_csv(FCOVERcsv)
 # latitude : x, longitude : y, value : z
 FCOVER.rename(columns = {'x':'latitude','y':'longitude','z':'FCOVER'}, inplace = True)
 
-# Scale values 0-255 --> 0-7 (correct LAI interval)
+# Scale values 0-255 --> 0-7 (correct FCOVER interval)
 def scaleFCOVER(row):
     return (row['FCOVER']/255)*1
 # apply function
 FCOVER['FCOVER'] = FCOVER.apply(scaleFCOVER, axis=1)
+
+
+#%% Show the FPAR geoTiff
+FPARtiff = 'data/copernicus_land/FPAR300/c_gls_FAPAR300-RT0-FAPAR_202010310000_CUSTOM_OLCI_V1.1.1.tiff'
+FPARrs = rs.open(FPARtiff)
+show(FPARrs)
+# Print specifications of LAI geoTiff
+# Print specifications
+print('No. of bands' + str(FPARrs.count))
+print('Image resolution: ' + str(FPARrs.height) + str(FPARrs.width))
+print('Coordinate Reference System (CRS): ' + str(FPARrs.crs))
+
+# load LAI300 csv as pandas dataframe
+FPARcsv = 'data/copernicus_land/FPAR300/c_gls_FAPAR300-RT0-FAPAR_202010310000_CUSTOM_OLCI_V1.1.1.csv'
+FPAR = pd.read_csv(FPARcsv)
+# latitude : x, longitude : y, value : z
+FPAR.rename(columns = {'x':'latitude','y':'longitude','z':'FPAR'}, inplace = True)
+
+# Scale values 0-255 --> 0-7 (correct FPAR interval)
+def scaleFPAR(row):
+    return (row['FPAR']/255)*1
+# apply function
+FPAR['FPAR'] = FPAR.apply(scaleFPAR, axis=1)
+
+
+#%% Show the DMP geoTiff
+DMPtiff = 'data/copernicus_land/DMP300/c_gls_DMP300-RT0-DMP_202010310000_CUSTOM_OLCI_V1.1.1.tiff'
+DMPrs = rs.open(DMPtiff)
+show(DMPrs)
+# Print specifications of LAI geoTiff
+# Print specifications
+print('No. of bands' + str(DMPrs.count))
+print('Image resolution: ' + str(DMPrs.height) + str(DMPrs.width))
+print('Coordinate Reference System (CRS): ' + str(DMPrs.crs))
+
+# load LAI300 csv as pandas dataframe
+DMPcsv = 'data/copernicus_land/DMP300/c_gls_DMP300-RT0-DMP_202010310000_CUSTOM_OLCI_V1.1.1.csv'
+DMP = pd.read_csv(DMPcsv)
+# latitude : x, longitude : y, value : z
+DMP.rename(columns = {'x':'latitude','y':'longitude','z':'DMP'}, inplace = True)
+
+# Scale values 0-255 --> 0-7 (correct DMP interval)
+def scaleDMP(row):
+    return (row['DMP']/255)*1
+# apply function
+DMP['DMP'] = DMP.apply(scaleDMP, axis=1)
 
