@@ -16,6 +16,7 @@ import rasterio as rs
 from rasterio.plot import show
 # general purpose
 import pandas as pd
+import glob
 
 
 # Show the NDVI geoTiff
@@ -180,12 +181,78 @@ def scaleALDH(row):
 # apply function
 ALDH['ALDH'] = ALDH.apply(scaleALDH, axis=1)
 
+#%% Show the HLST1k geoTiff
 
 def cutLat(row):
     return int(row['latitude']*100)/100
 def cutLon(row):
     return int(row['longitude']*100)/100
 
+land_data = []
+
+path  = 'data/copernicus_land/'
+
+var_name = 'HLST1k'
+variables = ['HLST1k', 'FCOVER']
+
+for var_name in variables: 
+    
+    tiff_path = path + var_name + '/*.tiff'
+    csv_path = path + var_name + '/*.csv'
+    tiff_files = glob.glob(tiff_path)
+    csv_files = glob.glob(csv_path)
+    
+    for i in range(len(tiff_files)):
+    
+        var_name = tiff_files[i][28:-5]
+        
+        print('----------------')
+        print('Loading: ' + var_name)
+        print('----------------')
+        
+        # Show the dataset
+        tiff = tiff_files[i]
+        rsDATA = rs.open(tiff)
+        show(rsDATA)
+        # Print specifications
+        print('No. of bands' + str(rsDATA.count))
+        print('Image resolution: ' + str(rsDATA.height) + str(rsDATA.width))
+        print('Coordinate Reference System (CRS): ' + str(rsDATA.crs))
+        
+        # load csv as pandas dataframe
+        csv = csv_files[i]
+        DATA = pd.read_csv(csv)
+        # latitude : x, longitude : y, value : z
+        DATA.rename(columns = {'x':'latitude','y':'longitude','z':var_name}, inplace = True)
+        # merge with general dataset
+        DATA['latitude'] = DATA.apply(cutLat, axis=1)
+        DATA['longitude'] = DATA.apply(cutLon, axis=1)
+
+
+
+
+#%% Merge datasets
+
+
 ALDH['latitude'] = ALDH.apply(cutLat, axis=1)
 ALDH['longitude'] = ALDH.apply(cutLon, axis=1)
+DMP['latitude'] = DMP.apply(cutLat, axis=1)
+DMP['longitude'] = DMP.apply(cutLon, axis=1)
+FCOVER['latitude'] = FCOVER.apply(cutLat, axis=1)
+FCOVER['longitude'] = FCOVER.apply(cutLon, axis=1)
+FPAR['latitude'] = FPAR.apply(cutLat, axis=1)
+FPAR['longitude'] = FPAR.apply(cutLon, axis=1)
+LAI['latitude'] = LAI.apply(cutLat, axis=1)
+LAI['longitude'] = LAI.apply(cutLon, axis=1)
+NDVI['latitude'] = NDVI.apply(cutLat, axis=1)
+NDVI['longitude'] = NDVI.apply(cutLon, axis=1)
+SWI['latitude'] = ALDH.apply(cutLat, axis=1)
+SWI['longitude'] = ALDH.apply(cutLon, axis=1)
 
+
+land_data = pd.merge(ALDH,DMP,on=["latitude",'longitude'])
+land_data = land_data.merge(FCOVER,on=["latitude",'longitude'])
+land_data = land_data.merge(FPAR,on=["latitude",'longitude'])
+land_data = land_data.merge(LAI,on=["latitude",'longitude'])
+land_data = land_data.merge(NDVI,on=["latitude",'longitude'])
+land_data = land_data.merge(SWI,on=["latitude",'longitude'])
