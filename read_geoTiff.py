@@ -134,3 +134,52 @@ def scaleDMP(row):
 # apply function
 DMP['DMP'] = DMP.apply(scaleDMP, axis=1)
 
+
+#%% Show the SWI geoTiff
+SWItiff = 'data/copernicus_land/SWI1k/c_gls_SWI1km-SWI-100_202011011200_CUSTOM_SCATSAR_V1.0.1.tiff'
+SWIrs = rs.open(SWItiff)
+show(SWIrs)
+# Print specifications of LAI geoTiff
+# Print specifications
+print('No. of bands' + str(SWIrs.count))
+print('Image resolution: ' + str(SWIrs.height) + str(SWIrs.width))
+print('Coordinate Reference System (CRS): ' + str(SWIrs.crs))
+
+# load LAI300 csv as pandas dataframe
+SWIcsv = 'data/copernicus_land/SWI1k/c_gls_SWI1km-SWI-100_202011011200_CUSTOM_SCATSAR_V1.0.1.csv'
+SWI = pd.read_csv(SWIcsv)
+# latitude : x, longitude : y, value : z
+SWI.rename(columns = {'x':'latitude','y':'longitude','z':'SWI'}, inplace = True)
+
+# Scale values 0-255 --> 0-7 (correct DMP interval)
+def scaleSWI(row):
+    return (row['SWI']/255)*1
+# apply function
+SWI['SWI'] = SWI.apply(scaleSWI, axis=1)
+
+
+#%% Show the ALDH1k geoTiff
+ALDHtiff = 'data/copernicus_land/ALDH1k/c_gls_ALDH-NMOD_201912130000_CUSTOM_PROBAV_V1.5.1.tiff'
+ALDHrs = rs.open(ALDHtiff)
+show(ALDHrs)
+# Print specifications of LAI geoTiff
+# Print specifications
+print('No. of bands' + str(ALDHrs.count))
+print('Image resolution: ' + str(ALDHrs.height) + str(ALDHrs.width))
+print('Coordinate Reference System (CRS): ' + str(ALDHrs.crs))
+
+# load LAI300 csv as pandas dataframe
+ALDHcsv = 'data/copernicus_land/ALDH1k/c_gls_ALDH-NMOD_201912130000_CUSTOM_PROBAV_V1.5.1.csv'
+ALDH = pd.read_csv(ALDHcsv)
+# latitude : x, longitude : y, value : z
+ALDH.rename(columns = {'x':'latitude','y':'longitude','z':'ALDH'}, inplace = True)
+
+# Scale values 0-255 --> 0-7 (correct DMP interval)
+def scaleALDH(row):
+    return (row['ALDH']/255)*1
+# apply function
+ALDH['ALDH'] = ALDH.apply(scaleALDH, axis=1)
+
+
+
+
