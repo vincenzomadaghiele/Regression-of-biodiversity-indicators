@@ -18,9 +18,10 @@ import glob
 rtxyz = Raster2xyz()
 
 
-path  = 'data/copernicus_land/'
+path  = 'data/copernicus_land_france/'
 # names of the geoTiff and csv dataset folders
-datasets = ['FCOVER300']
+datasets = ['ALBH1k', 'ALDH1k', 'BA300', 'DMP300', 'FAPAR300', 'FCOVER300', 'GDMP300', 
+            'HLST1k', 'LAI300', 'NDVI300', 'SSM1k', 'SWI1k', 'TOCR1k', 'VCI']
 
 i = 0
 for dataset in datasets: 
@@ -35,7 +36,7 @@ for dataset in datasets:
         
         # Name of the file without .tiff extension
         file_name = tiff_files[i].split('/')[-1][:-5]
-        out_path = csv_path + file_name + '.csv'
+        out_path = csv_path + '/' + file_name + '.csv'
         
         print('----------------')
         print('Converting: ' + file_name)
