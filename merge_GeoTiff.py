@@ -47,11 +47,12 @@ land_data['latitude'] = land_data.apply(cutLat, axis=1)
 land_data['longitude'] = land_data.apply(cutLon, axis=1)
 land_data = land_data.groupby(['latitude','longitude'])['NDVI'].mean().reset_index()
 
+
 #%%
 
 path  = 'data/copernicus_land_france/'
 datasets = ['ALBH1k', 'ALDH1k', 'BA300', 'DMP300', 'FAPAR300', 'FCOVER300', 'GDMP300', 
-            'HLST1k', 'LAI300', 'NDVI300', 'SSM1k', 'SWI1k', 'TOCR1k', 'VCI']
+            'HLST1k', 'LAI300', 'SSM1k', 'SWI1k', 'TOCR1k', 'VCI']
 
 i = 0
 for dataset in datasets: 
@@ -67,9 +68,9 @@ for dataset in datasets:
         # This naming should be universal for all files and make each variable unique
         var_name = tiff_files[i].split('/')[-1].split('.')[0].split('_')[2]
         
-        print('-'*89)
+        print('-'*30)
         print('Loading: ' + var_name)
-        print('-'*89)
+        print('-'*30)
         
         # Show the dataset
         tiff = tiff_files[i]
@@ -91,7 +92,7 @@ for dataset in datasets:
         # make the mean of the values with the same (lat,lon) couple
         DATA = DATA.groupby(['latitude','longitude'])[var_name].mean().reset_index()
         # merge with general dataset
-        land_data = land_data.merge(DATA,on=["latitude",'longitude'])
+        land_data = land_data.merge(DATA,on=["latitude",'longitude'], how = "outer")
         i += 1
 
 export_path = 'data/france_land.csv'
