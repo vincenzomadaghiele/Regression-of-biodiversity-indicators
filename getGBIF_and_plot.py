@@ -53,10 +53,19 @@ x5 = 17.17163
 y5 = 40.26192
 
 # insert the polygon coordinates here
-polygon ='POLYGON((17.17163 40.26192,18.07251 40.26192,18.07251 40.76307,17.17163 40.76307,17.17163 40.26192))'
+# puglia polygon
+#polygon ='POLYGON((17.17163 40.26192,18.07251 40.26192,18.07251 40.76307,17.17163 40.76307,17.17163 40.26192))'
+
+# france polygon
+#polygon = 'POLYGON((3.5 44,5 44,5 45,3.5 45,3.5 44))'
 
 #set parameters for API call
-params = ['limit=300', 'hasCoordinate=true', 'hasGeospatialIssue=false', 'geometry='+polygon, ] 
+#params = ['limit=300', 'hasCoordinate=true', 'hasGeospatialIssue=false', 'geometry='+polygon, ]
+ 
+lat_range = '44,45'
+lon_range = '3.5,5'
+kingdom_key = '6' # kingdom: plantae
+params = ['limit=300', 'hasCoordinate=true', 'hasGeospatialIssue=false', 'decimalLatitude='+lat_range, 'decimalLongitude='+lon_range, 'kingdomKey='+kingdom_key ]
 #Set up a simple while loop to continue downloading until the last #page
 df = pd.DataFrame()
 endOfRecords = False
@@ -66,6 +75,33 @@ status = 200
 while endOfRecords == False and status == 200:
     df, endOfRecords, status = get_GBIF_response(base_url, offset, params, df)
     offset = len(df) + 1
+    
+    
+#%% cut the columns 'decimalLatitude' and 'decimalLongitude' to 0.01 precision
+# count unique species (.groupBy(['lat','lon'])['species'].nunique())
+# create dataset with only 'lat', 'lon', 'num_species'
+# export to csv the first one and the second one
+    
+def cutLat(row):
+    return int(row['latitude']*100)/100
+def cutLon(row):
+    return int(row['longitude']*100)/100
+
+export_path = 'data/GBIF_france.csv'
+land_data.to_csv(export_path, index = True)
+
+df['decimalLatitude'] = df.apply(cutLat, axis=1)
+df['decimalLongitude'] = df.apply(cutLon, axis=1)
+
+export_path = 'data/GBIF_france_cutLatLon.csv'
+land_data.to_csv(export_path, index = True)
+
+unique_species_count = df.groupBy(['decimalLatitude','decimalLongitude'])['species'].nunique().reset_index()
+
+export_path = 'data/GBIF_france_unique_species_count.csv'
+land_data.to_csv(export_path, index = True)
+
+
     
 #%% Plot by grid cell
 
@@ -78,8 +114,8 @@ species_gdf = gpd.GeoDataFrame(df,
 # Create GeoDataFrame with 1/10th degree grid cells
 
 #Make list of 1 degree grid cells with shapely polygons
-long_range = list(i/10 for i in range(170,180)) 
-lat_range = list(i/10 for i in range(400,410))
+long_range = list(i/10 for i in range(30,50)) 
+lat_range = list(i/10 for i in range(430,450))
 
 poly_list = []
 for x in long_range:
@@ -144,7 +180,13 @@ grid_df_1d_nozero.plot(column = 'species_count',
 ax.set_facecolor('lightblue')
 plt.xlabel('Longitude')
 plt.ylabel('Latitude')
-plt.title(r"Biodiversity of Brindisi by grid cell", fontdict = {'fontsize': 'x-large'})
-plt.xlim((17, 19))
-plt.ylim((39, 41))
+plt.title(r"Biodiversity of France-region by grid cell", fontdict = {'fontsize': 'x-large'})
+plt.xlim((3, 5))
+plt.ylim((43, 45))
 plt.tight_layout()
+
+#%% Export to csv (RUN THIS!!)
+normal_df = pd.DataFrame(grid_df_1d_nozero)
+export_path = 'data/france_GBIF.csv'
+normal_df.to_csv(grid_df_1d_nozero, index = True)
+
