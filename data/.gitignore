@@ -1,6 +1,8 @@
 *.csv
 *.tiff
 *.nc
+*.xls
+*.txt
 .copernicus_land_puglia
 .copernicus_land_france
 copernicus_land.zip
