@@ -1,0 +1,4 @@
+*.csv
+*.tiff
+*.nc
+*.xls
