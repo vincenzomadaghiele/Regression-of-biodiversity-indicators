@@ -10,7 +10,6 @@ The purpose of this project will be to regeress important biodiversity metrics f
 
 - Regression of biodiversity index from satellite observations and environmental parameters for a given area. A comparison of performance will be made between the different regression methods studied in the course.
 - Identification of the most important indicators of biodiversity among all of the variables considered in the dataset using regression trees and random forest. 
-- Prediction of areas at risk of biodiversity loss in the future from satellite data (Copernicus offers time series data).
 
 This project does not aim to be universal: a suitable geographical area (or a set of similar areas) will be selected based on the availability of data, and the experiments will be conducted on data from the selected area and then tested also on similar habitats but in different geographic locations, to determine the generalization possibilities of the model. However, in order to obtain a better performing model, a collaboration with ecologists and expert in the field would be needed.
 
