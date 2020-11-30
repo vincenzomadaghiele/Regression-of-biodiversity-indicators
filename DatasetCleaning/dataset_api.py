@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import cdsapi
     
-def get_era5_land(store_path, area):
+def get_era5_land(store_path, area, year):
     c = cdsapi.Client()
 
     c.retrieve(
@@ -18,7 +18,7 @@ def get_era5_land(store_path, area):
             'volumetric_soil_water_layer_1', 'volumetric_soil_water_layer_2', 'volumetric_soil_water_layer_3',
             'volumetric_soil_water_layer_4',
         ],
-        'year': '2012',
+        'year': year,
         'month': [
             '01', '02', '03',
             '04', '05', '06',
