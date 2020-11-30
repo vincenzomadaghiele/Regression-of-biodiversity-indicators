@@ -23,7 +23,7 @@ import utils as ut
 
 folder = os.path.abspath(os.path.join(__file__, '..'))
 
-for region in ['france']:
+for region in regions:
     
     lat = regions[region]['latitude']
     lon = regions[region]['longitude']
