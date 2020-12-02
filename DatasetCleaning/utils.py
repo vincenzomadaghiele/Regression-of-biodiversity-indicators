@@ -14,7 +14,11 @@ tocr_labels = ['TOCR-REF-NOR-BLUE', 'TOCR-REF-NOR-NIR', 'TOCR-REF-NOR-SWIR', 'TO
 swi_labels = ['SWI1km-SWI-002', 'SWI1km-SWI-100', 'SWI1km-SWI-040', 'SWI1km-SWI-005', 
               'SWI1km-SWI-010', 'SWI1km-SWI-060', 'SWI1km-SWI-015', 'SWI1km-SWI-020']
 
-def get_climate_dataset(path, area, year):
+def get_climate_dataset(path, area, year=2012, 
+                        month=['01', '02', '03',
+                            '04', '05', '06',
+                            '07', '08', '09',
+                            '10', '11', '12']):
     '''
     If exists, return the climate dataset of an area, 
     otherwise retrieve it from cds api and store it in
@@ -34,7 +38,7 @@ def get_climate_dataset(path, area, year):
     '''
     
     if not os.path.isfile(path):
-        api.get_era5_land(path, area, year)
+        api.get_era5_land(path, area, year, month)
         
     with xa.open_mfdataset(path) as ds:
         df_cds = ds.to_dataframe() 
@@ -55,7 +59,6 @@ def get_land_dataset(path, lat, lon):
 
     '''
     df_land = pd.read_csv(path)
-    df_land = df_land.drop(columns=['Unnamed: 0'])
     
     # Retrieving only data of our location
     df_land = df_land.loc[(df_land['latitude'] >= lat[0]) & (df_land['latitude'] <= lat[1]) 
@@ -82,10 +85,14 @@ def get_land_dataset(path, lat, lon):
                                    'TOCR-TOCR-QFLAG', 'TOCR-NMOD','TOCR-REF-NOR-SWIR-ERR', 
                                     'TOCR-REF-NOR-RED-ERR','TOCR-REF-NOR-BLUE-ERR', 'TOCR-SZN',
                                     'TOCR-REF-NOR-NIR-ERR', 'BA300-FDOB-DEKAD', 'BA300-BA-DEKAD',
-                                    'BA300-FDOB-SEASON', 'BA300-CP-DEKAD', 'SSM1km-ssm'])
+                                    'BA300-FDOB-SEASON', 'BA300-CP-DEKAD', 'SSM1km-ssm', 
+                                    'Unnamed: 0', 'DMP300-RT0-DMP', ], errors='ignore')
     
-    # Temporary removing untile further notice
-    df_land = df_land.drop(columns=['DMP300-RT0-DMP', 'LST-LST', 'VCI_x'])
+    ############################################################
+    # TEMPORARY REMOVING THOSE COLUMNS FOR ERRORS IN THE DATASET
+    ############################################################
+    df_land = df_land.drop(columns=['LST-LST', 'VCI_x', 'VCI_y'])
+    df_land = df_land.drop(columns=swi_labels)
     
     return df_land
 
@@ -115,20 +122,20 @@ def land_handle_specific_values(df_land, handle='custom_set'):
         
     df_albedo = df_land[albedo_labels].copy()
     df_tocr = df_land[tocr_labels].copy()
-    df_swi = df_land[swi_labels].copy()
+    #df_swi = df_land[swi_labels].copy()
     
     albedo_specific_min = df_albedo[df_albedo == 65534]
     albedo_specific_max = df_albedo[df_albedo > 10000]
     tocr_specific = df_tocr[df_tocr > 2400]
-    swi_specific_error = df_swi[df_swi >= 252]
-    swi_specific_greater = df_swi[df_swi > 200]
+    #swi_specific_error = df_swi[df_swi >= 252]
+    #swi_specific_greater = df_swi[df_swi > 200]
     
     if(handle == 'custom_set'):
         df_albedo[np.isfinite(albedo_specific_max)] = 10000
         df_albedo[np.isfinite(albedo_specific_min)] = 0
         df_tocr[np.isfinite(tocr_specific)] = None
-        df_swi[np.isfinite(swi_specific_greater)] = 200
-        df_swi[np.isfinite(swi_specific_error)] = None
+        #df_swi[np.isfinite(swi_specific_greater)] = 200
+        #df_swi[np.isfinite(swi_specific_error)] = None
         
         
     if(handle == 'set_null'):
@@ -140,7 +147,7 @@ def land_handle_specific_values(df_land, handle='custom_set'):
     
     df_land[albedo_labels] = df_albedo
     df_land[tocr_labels] = df_tocr
-    df_land[swi_labels] = df_swi
+    #df_land[swi_labels] = df_swi
     
     return df_land
 

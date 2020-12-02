@@ -22,38 +22,49 @@ import dataset_api as api
 import utils as ut
 
 folder = os.path.abspath(os.path.join(__file__, '..'))
+action = 'mean'
 
-for region in regions:
-    
-    lat = regions[region]['latitude']
-    lon = regions[region]['longitude']
+for r in regions:
+    region = regions[r]
+    lat = region['latitude']
+    lon = region['longitude']
     area = [lat[1], lon[0], lat[0], lon[1]]
 
     
     # CLIMATE
-    climate_path = folder + '/' + region + '_climate.nc'
-    df_cds = ut.get_climate_dataset(climate_path, area, regions[region]['year'])
-    print("Climate\t" + region + "\tnull data count: ", df_cds.isna().any().sum())
+    ## Set this flag to get the average of 2012 or to pass the 
+    ##same year/month of the land dataset
+    
+    get_average_year = False
+    
+    if(get_average_year):
+        climate_path = folder + '/climate/' + r + '_2012avg_climate.nc'
+        df_cds = ut.get_climate_dataset(climate_path, area)
+    else:
+        year = region['year']
+        month = region['month']
+        climate_path = folder + '/' + r + '_' + str(year) + '_' + str(month) + 'avg_climate.nc'
+        df_cds = ut.get_climate_dataset(climate_path, area, year)
+    
+    
+    print("Climate\t" + r + "\tnull data count: ", df_cds.isna().any().sum())
     
     df_cds = df_cds.groupby(['longitude', 'latitude']).mean()
     
     
     # LAND
-    land_path = folder + '/' + region + "_land.csv"
+    land_path = folder + '/land/' + r + "_land.csv"
     df_land = ut.get_land_dataset(land_path, lat, lon)
-    print("Land\t" + region + " \tnull data count: ", df_cds.isna().any().sum())
+    print("Land\t" + r + " \tnull data count: ", df_cds.isna().any().sum())
 
     df_land = ut.land_handle_specific_values(df_land)
 
-    df_land = ut.handle_outliers(df=df_land, columns=ut.albedo_labels + ut.tocr_labels, area=area, action='closest_point_mean', verbose=False)
-    df_land = ut.handle_outliers(df=df_land, columns=ut.swi_labels, area=area, detect='no_detection', action='closest_point_mean', verbose=False)
-
-    # MERGE LAND AND CLIMATE
+    df_land = ut.handle_outliers(df=df_land, columns=ut.albedo_labels + ut.tocr_labels, area=area, action=action, verbose=True)
     
-    df_cds_land = ut.merge_climate_land(df_cds, df_land)
+    #df_land = ut.handle_outliers(df=df_land, columns=ut.swi_labels, area=area, detect='no_detection', action=action, verbose=True)
     
     # ADD RICHNESS
-    richness_path = folder + "/EEA_richness_latLon_" + region + ".csv"
+    richness_path = folder + "/richness/EEA_richness_latLon_" + r + ".csv"
     
     df_richness = pd.read_csv(richness_path).drop(columns=['Unnamed: 0'])
 
@@ -63,10 +74,19 @@ for region in regions:
     df_richness = df_richness[df_richness.habitat_richness > 0]
     df_richness.set_index(['longitude', 'latitude'], inplace=True)
     
-    df_final = df_richness.merge(df_cds_land, left_index=True, right_index=True)
+    df_richness_land = df_richness.merge(df_land, left_index=True, right_index=True)
+    
+    # MERGE WITH CLIMATE
+    
+    df_final = ut.merge_climate_land(df_cds, df_richness_land)
+    
     
     ## SAVE
-    merge_name = 'france.csv'
+    if(get_average_year):
+        merge_name = r + '_yearavg_out_' + action + '.csv'
+    else:
+        merge_name = r + '_out_' + action + '.csv'
+        
     merge_path = os.path.abspath(os.path.join(__file__, '..', '..', 'Dataset', merge_name))
     
     df_final.to_csv(merge_path)
