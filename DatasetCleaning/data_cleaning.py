@@ -23,6 +23,7 @@ import utils as ut
 
 folder = os.path.abspath(os.path.join(__file__, '..'))
 action = 'mean'
+handle = 'custom_set'
 
 for r in regions:
     region = regions[r]
@@ -35,7 +36,7 @@ for r in regions:
     ## Set this flag to get the average of 2012 or to pass the 
     ##same year/month of the land dataset
     
-    get_average_year = False
+    get_average_year = True
     
     if(get_average_year):
         climate_path = folder + '/climate/' + r + '_2012avg_climate.nc'
@@ -56,12 +57,6 @@ for r in regions:
     land_path = folder + '/land/' + r + "_land.csv"
     df_land = ut.get_land_dataset(land_path, lat, lon)
     print("Land\t" + r + " \tnull data count: ", df_cds.isna().any().sum())
-
-    df_land = ut.land_handle_specific_values(df_land)
-
-    df_land = ut.handle_outliers(df=df_land, columns=ut.albedo_labels + ut.tocr_labels, area=area, action=action, verbose=True)
-    
-    #df_land = ut.handle_outliers(df=df_land, columns=ut.swi_labels, area=area, detect='no_detection', action=action, verbose=True)
     
     # ADD RICHNESS
     richness_path = folder + "/richness/EEA_richness_latLon_" + r + ".csv"
@@ -76,6 +71,16 @@ for r in regions:
     
     df_richness_land = df_richness.merge(df_land, left_index=True, right_index=True)
     
+    # FILTER LAND
+    
+
+    df_richness_land = ut.land_handle_specific_values(df_richness_land, handle=handle)
+
+    df_richness_land = ut.handle_outliers(df=df_richness_land, columns=ut.albedo_labels + ut.tocr_labels, area=area, action=action, verbose=True)
+    
+    df_richness_land = ut.handle_outliers(df=df_richness_land, columns=ut.swi_labels, area=area, detect='no_detection', action=action, verbose=True)
+    
+    
     # MERGE WITH CLIMATE
     
     df_final = ut.merge_climate_land(df_cds, df_richness_land)
@@ -83,9 +88,9 @@ for r in regions:
     
     ## SAVE
     if(get_average_year):
-        merge_name = r + '_yearavg_out_' + action + '.csv'
+        merge_name = r + '_yearavg_out_' + action + '_handle_' + handle + '.csv'
     else:
-        merge_name = r + '_out_' + action + '.csv'
+        merge_name = r + '_out_' + action + '_handle_' + handle + '.csv'
         
     merge_path = os.path.abspath(os.path.join(__file__, '..', '..', 'Dataset', merge_name))
     

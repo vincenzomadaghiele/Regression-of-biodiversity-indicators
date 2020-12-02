@@ -86,13 +86,12 @@ def get_land_dataset(path, lat, lon):
                                     'TOCR-REF-NOR-RED-ERR','TOCR-REF-NOR-BLUE-ERR', 'TOCR-SZN',
                                     'TOCR-REF-NOR-NIR-ERR', 'BA300-FDOB-DEKAD', 'BA300-BA-DEKAD',
                                     'BA300-FDOB-SEASON', 'BA300-CP-DEKAD', 'SSM1km-ssm', 
-                                    'Unnamed: 0', 'DMP300-RT0-DMP', ], errors='ignore')
+                                    'Unnamed: 0', 'LST-LST' ], errors='ignore')
     
     ############################################################
     # TEMPORARY REMOVING THOSE COLUMNS FOR ERRORS IN THE DATASET
     ############################################################
-    df_land = df_land.drop(columns=['LST-LST', 'VCI_x', 'VCI_y'])
-    df_land = df_land.drop(columns=swi_labels)
+    df_land = df_land.drop(columns=['VCI_x', 'VCI_y'])
     
     return df_land
 
@@ -122,20 +121,20 @@ def land_handle_specific_values(df_land, handle='custom_set'):
         
     df_albedo = df_land[albedo_labels].copy()
     df_tocr = df_land[tocr_labels].copy()
-    #df_swi = df_land[swi_labels].copy()
+    df_swi = df_land[swi_labels].copy()
     
     albedo_specific_min = df_albedo[df_albedo == 65534]
     albedo_specific_max = df_albedo[df_albedo > 10000]
     tocr_specific = df_tocr[df_tocr > 2400]
-    #swi_specific_error = df_swi[df_swi >= 252]
-    #swi_specific_greater = df_swi[df_swi > 200]
+    swi_specific_error = df_swi[df_swi >= 252]
+    swi_specific_greater = df_swi[df_swi > 200]
     
     if(handle == 'custom_set'):
         df_albedo[np.isfinite(albedo_specific_max)] = 10000
         df_albedo[np.isfinite(albedo_specific_min)] = 0
         df_tocr[np.isfinite(tocr_specific)] = None
-        #df_swi[np.isfinite(swi_specific_greater)] = 200
-        #df_swi[np.isfinite(swi_specific_error)] = None
+        df_swi[np.isfinite(swi_specific_greater)] = 200
+        df_swi[np.isfinite(swi_specific_error)] = None
         
         
     if(handle == 'set_null'):
@@ -147,7 +146,7 @@ def land_handle_specific_values(df_land, handle='custom_set'):
     
     df_land[albedo_labels] = df_albedo
     df_land[tocr_labels] = df_tocr
-    #df_land[swi_labels] = df_swi
+    df_land[swi_labels] = df_swi
     
     return df_land
 
@@ -189,7 +188,7 @@ def handle_outliers(df, columns, area, detect='z_score', action='closest_point_m
     
     def remove(df, df_outliers, cols, area):
         df[cols] = df_outliers
-        return df.dropna(subset=cols) 
+        return df.dropna(subset=cols)
                     
     detections = {'z_score': z_score, 'no_detection': no_detection}
     actions = {'closest_point_mean': closest_point_mean, 'mean': mean, 'remove': remove}
