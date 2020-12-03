@@ -18,12 +18,12 @@ for path in modules_path:
         sys.path.append(path)
 
 from areas import regions
-import dataset_api as api
 import utils as ut
 
 folder = os.path.abspath(os.path.join(__file__, '..'))
-action = 'mean'
-handle = 'custom_set'
+action = 'closest_point_mean'       # 'remove', 'closest_point_mean', 'mean'
+handle = 'custom_set'     # 'set_null', 'custom_set'
+get_average_year = False
 
 for r in regions:
     region = regions[r]
@@ -36,7 +36,7 @@ for r in regions:
     ## Set this flag to get the average of 2012 or to pass the 
     ##same year/month of the land dataset
     
-    get_average_year = True
+    
     
     if(get_average_year):
         climate_path = folder + '/climate/' + r + '_2012avg_climate.nc'
@@ -44,7 +44,7 @@ for r in regions:
     else:
         year = region['year']
         month = region['month']
-        climate_path = folder + '/' + r + '_' + str(year) + '_' + str(month) + 'avg_climate.nc'
+        climate_path = folder + '/climate/' + r + '_' + str(year) + '_' + str(month[0]) + '_climate.nc'
         df_cds = ut.get_climate_dataset(climate_path, area, year)
     
     

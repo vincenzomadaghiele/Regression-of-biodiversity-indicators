@@ -105,7 +105,7 @@ def land_handle_specific_values(df_land, handle='custom_set'):
     df_land : dataframe of land dataset
     handle : how to handle the specific values
         'custom_set' = custom handling based on documentation
-        'remove' = remove rows
+        'set_null' = set values to None
 
     Returns
     -------
@@ -159,11 +159,16 @@ def handle_outliers(df, columns, area, detect='z_score', action='closest_point_m
     df_land : dataframe
     columns : columns on which perform outliers detection
     detect : technique to detect the outliers
+        'z_score': set as outliers values with z_score > 3,
+        'no_detection': do not detected outiers, used to handle previous null values
     action : operation to handle outliers
+        'closest_point_mean': perform the mean of the 4 closest point for each direction, 
+        'mean': mean of the column, 
+        'remove': remove the rows with null values
 
     Returns
     -------
-    df_land
+    df_land 
 
     '''
     
@@ -271,18 +276,18 @@ def mean_of_closest_point(data, precision, margin, standard_value=0):
     
     i = precision
     for d in data.index:
-        if(math.isnan(data.loc[d])):
+        if(math.isnan(data.loc[d].values[0])):
             values = [standard_value] * 4
             for j, direction in enumerate(directions):
                 lon, lat = d
                 x_off, y_off = direction
                 off = 0
                 while((lon, lat) in data.index):
-                    if(math.isnan(data.loc[(lon, lat)]) == False):
-                        values[j] = data.loc[(lon, lat)]
+                    if(math.isnan(data.loc[(lon, lat)].values[0]) == False):
+                        values[j] = data.loc[(lon, lat)].values[0]
                         break
                     off += 1
                     lon += x_off*precision*off
                     lat += y_off*precision*off
-            data.loc[d] = np.mean(values)
+            data.loc[d].values[0] = np.mean(values)
     return data
