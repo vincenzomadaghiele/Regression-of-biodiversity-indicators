@@ -21,11 +21,11 @@ from areas import regions
 import utils as ut
 
 folder = os.path.abspath(os.path.join(__file__, '..'))
-action = 'closest_point_mean'       # 'remove', 'closest_point_mean', 'mean'
-handle = 'custom_set'     # 'set_null', 'custom_set'
-get_average_year = False
+action = 'remove'       # 'remove', 'closest_point_mean', 'mean'
+handle = 'set_null'     # 'set_null', 'custom_set'
+get_average_year = True
 
-for r in regions:
+for r in ['france', 'finland']:
     region = regions[r]
     lat = region['latitude']
     lon = region['longitude']
@@ -84,7 +84,7 @@ for r in regions:
     # MERGE WITH CLIMATE
     
     df_final = ut.merge_climate_land(df_cds, df_richness_land)
-    
+    df_final = df_final[~df_final.index.duplicated(keep='first')]
     
     ## SAVE
     if(get_average_year):

@@ -219,6 +219,9 @@ def handle_outliers(df, columns, area, detect='z_score', action='closest_point_m
     
     df = actions[action](df, df_outliers, columns, area)
     
+    if(verbose):
+        print("All null values have been removed. ", df[columns].isnull().sum())
+    
     return df   
 
 def merge_climate_land(df_cds, df_land):
