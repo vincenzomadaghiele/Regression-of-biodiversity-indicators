@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import math
 import pandas as pd
 import numpy as np
@@ -7,6 +6,7 @@ import dataset_api as api
 import xarray as xa
 import os
 from scipy import stats
+from sklearn.impute import KNNImputer
 
 albedo_labels = ['ALBH-AL-BH-NI', 'ALBH-AL-BH-VI', 'ALBH-AL-BH-BB',
                  'ALDH-AL-DH-BB', 'ALDH-AL-DH-VI', 'ALDH-AL-DH-NI']
@@ -194,9 +194,15 @@ def handle_outliers(df, columns, area, detect='z_score', action='closest_point_m
     def remove(df, df_outliers, cols, area):
         df[cols] = df_outliers
         return df.dropna(subset=cols)
-                    
+    
+    def knn(df, df_outliers, cols, area):
+        df[cols] = df_outliers
+        imputer = KNNImputer(n_neighbors=4)
+        df[:]  = imputer.fit_transform(df)
+        return df                
+    
     detections = {'z_score': z_score, 'no_detection': no_detection}
-    actions = {'closest_point_mean': closest_point_mean, 'mean': mean, 'remove': remove}
+    actions = {'closest_point_mean': closest_point_mean, 'mean': mean, 'remove': remove, 'knn': knn}
     
     if(detect not in detections):
         print("Specify a correct detection.")

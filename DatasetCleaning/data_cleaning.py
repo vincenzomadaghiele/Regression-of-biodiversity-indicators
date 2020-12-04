@@ -21,11 +21,11 @@ from areas import regions
 import utils as ut
 
 folder = os.path.abspath(os.path.join(__file__, '..'))
-action = 'remove'       # 'remove', 'closest_point_mean', 'mean'
-handle = 'set_null'     # 'set_null', 'custom_set'
-get_average_year = True
+action = 'knn'       # 'remove', 'closest_point_mean', 'mean', 'knn
+handle = 'custom_set'     # 'set_null', 'custom_set'
+get_average_year = False
 
-for r in ['france', 'finland']:
+for r in ['bulgaria']:
     region = regions[r]
     lat = region['latitude']
     lon = region['longitude']
@@ -51,12 +51,13 @@ for r in ['france', 'finland']:
     print("Climate\t" + r + "\tnull data count: ", df_cds.isna().any().sum())
     
     df_cds = df_cds.groupby(['longitude', 'latitude']).mean()
-    
+    df_cds = ut.handle_outliers(df=df_cds, columns=df_cds.columns, area=area, detect='no_detection', action='remove', verbose=True)
+
     
     # LAND
     land_path = folder + '/land/' + r + "_land.csv"
     df_land = ut.get_land_dataset(land_path, lat, lon)
-    print("Land\t" + r + " \tnull data count: ", df_cds.isna().any().sum())
+    print("Land\t" + r + " \tnull data count: ", df_land.isna().any().sum())
     
     # ADD RICHNESS
     richness_path = folder + "/richness/EEA_richness_latLon_" + r + ".csv"
@@ -76,8 +77,9 @@ for r in ['france', 'finland']:
 
     df_richness_land = ut.land_handle_specific_values(df_richness_land, handle=handle)
 
-    df_richness_land = ut.handle_outliers(df=df_richness_land, columns=ut.albedo_labels + ut.tocr_labels, area=area, action=action, verbose=True)
-    
+
+    df_richness_land = ut.handle_outliers(df=df_richness_land, columns=ut.tocr_labels, area=area, detect='no_detection', action=action, verbose=True)
+    df_richness_land = ut.handle_outliers(df=df_richness_land, columns=ut.albedo_labels + ut.tocr_labels, area=area, action=action, verbose=True)    
     df_richness_land = ut.handle_outliers(df=df_richness_land, columns=ut.swi_labels, area=area, detect='no_detection', action=action, verbose=True)
     
     
@@ -85,6 +87,7 @@ for r in ['france', 'finland']:
     
     df_final = ut.merge_climate_land(df_cds, df_richness_land)
     df_final = df_final[~df_final.index.duplicated(keep='first')]
+    df_final = df_final.dropna()
     
     ## SAVE
     if(get_average_year):
