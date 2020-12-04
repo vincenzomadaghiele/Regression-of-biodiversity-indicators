@@ -21,8 +21,8 @@ from areas import regions
 import utils as ut
 
 folder = os.path.abspath(os.path.join(__file__, '..'))
-action = 'knn'       # 'remove', 'closest_point_mean', 'mean', 'knn
-handle = 'custom_set'     # 'set_null', 'custom_set'
+action = 'remove'      # 'remove', 'closest_point_mean', 'mean', 'knn
+handle = 'set_null'     # 'set_null', 'custom_set'
 get_average_year = False
 
 for r in ['bulgaria']:

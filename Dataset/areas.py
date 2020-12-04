@@ -20,11 +20,14 @@ regions = {
                 'biogeographical region(s)':  'Continental, Alpine, Mediterranean',
                 'nature reserves': "Gran Sasso, Maiella, Parco Nazionale d'Abruzzo, Monti Simbruini",
                 'description': 'The major biodiversity hotspot in this area are the Italian Appennini mountanis. Most of these area is protected by the Natura2000 programme as SCI sites, and it is recognized by the Italian government with the status of National Park. In this unique areas three different Biogeographical regions are present.'},
-    'bulgaria': {'latitude': [41.0, 44.0], 
-                'longitude': [22.0, 27.0], 
+    'bulgaria': {'latitude': [41., 43.5], 
+                'longitude': [22.0, 24.0], 
                 'year': 2014,
                 'month': ['05'],
                 'biogeographical region(s)':  'Continental, Alpine',
                  'nature reserves': 'Tsentralen Balkan, Kotlenska planina, Sredna gora',
                 'description': 'This area of Bulgaria is a major European biodiversity hotspot. Most of the covered Natura2000 sites in Bulgaria are situated along the Balkan mountains'},
 }
+#'latitude': [41.0, 44.0], 
+#                'longitude': [22.0, 27.0], 
+#                [22-24,41.5-42.5] e [23.5-25.5,42-43.5]
