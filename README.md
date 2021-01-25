@@ -1,5 +1,8 @@
 # Regression of species richness biodiversity indicator from satellite observations and environmental parameters
 ##### Authors: Vincenzo Madaghiele, Cosimo Chetta
+##### Supervisor: Maria A. Zuluaga
+
+###### This project was developed as course project for the MALIS course ad EURECOM university. It received an honorable mention among all the projects in the course: https://malis-course.github.io/2020/11/22/final-projects/
 
 ## Project Description
 
