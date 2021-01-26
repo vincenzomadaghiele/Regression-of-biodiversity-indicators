@@ -7,7 +7,7 @@ regions = {
                'biogeographical region(s)': 'Mediterranean, Alpine',
                'description': 'This area of france presents many Natura2000 sites, and it is composed of forest of mediterranean habitat'},
     'finland': {'latitude': [67.0, 69.0], 
-                'longitude': [25.0, 28.0], 
+                'longitude': [27.0, 28.0], 
                 'year': 2014, 
                 'month': ['05'],
                 'biogeographical region(s)': 'Boreal, Alpine',
