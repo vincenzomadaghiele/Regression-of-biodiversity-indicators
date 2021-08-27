@@ -2,7 +2,7 @@
 ##### Authors: Vincenzo Madaghiele, Cosimo Chetta
 ##### Supervisor: Maria A. Zuluaga
 
-###### This project was developed for the MALIS course ad EURECOM university. It received an honorable mention among many projects in the course: https://malis-course.github.io/2020/11/22/final-projects/
+###### This project was developed for the MALIS course at EURECOM university. It received an honorable mention among many projects in the course: https://malis-course.github.io/2020/11/22/final-projects/
 
 ## Project Description
 
