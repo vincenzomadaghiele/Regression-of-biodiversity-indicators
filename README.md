@@ -8,6 +8,10 @@
 
 Measuring biodiversity is often a complex and resource demanding task, which requires observations on the field. The European Union’s satellite infrastructure provides a constant stream of data, which is already used for different ecological monitoring applications. This experiment focuses on measuring the species richness biodiversity indicator from satellite observations and environmental parameters only, in order to provide a scalable, habitat-level method for biodiversity measuring. After building an appropriate database by collecting and aggregating different environmental variables, we have focused on comparing the performances of different regression models on the data, then we have experimented with a more complex neural network architecture, including satellite images into the datasets.
 
+<img src="https://github.com/vincenzomadaghiele/Regression-of-biodiversity-indicators/blob/master/TreeVisualization/imgs/Italy_example.png" alt="italy_example" width="400"/>
+
+A closer description of the project can be found in the [project report](https://github.com/vincenzomadaghiele/Regression-of-biodiversity-indicators/blob/master/Documents/MALIS_project_final_report.pdf) and in the [presentation slides](https://github.com/vincenzomadaghiele/Regression-of-biodiversity-indicators/blob/master/Documents/MALIS%20project%20slides.pdf)
+
 ## Running the code
 
 The libraries necessary to running this code are listed in the requirement.txt file. 
