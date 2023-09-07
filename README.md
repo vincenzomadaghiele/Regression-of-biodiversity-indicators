@@ -17,7 +17,8 @@ Measuring biodiversity is often a complex and resource demanding task, which req
 The libraries necessary to running this code are listed in the requirement.txt file. 
 After downloading this repository, run the following code in the terminal to install the dependencies:
 ```
-$ conda create --name <env> --file requirements.txt
+conda env create -f gdal-env.yml
+conda activate gdal_env
 ```
 
 ## Code description
